@@ -1,0 +1,61 @@
+# Lab 1
+
+1. man -k [search_term]
+2. /bin/cp
+   /bin/wc
+3. X: a window manager
+   [: no manual entry
+   w: shows who is currently logged in
+4. /usr/bin/gcc
+5. Un-does g+s, which makes all files created within the directory have their
+   group set to the directory's group.
+6. -mtime
+7. ./Documents/assign1.html [in home directory]
+8. 18
+9. x86_64-redhat-linux5E/include/bits/stdio-lock.h
+10. from the LANG environment variable
+11. 18
+12. C-a: move to beginning of line
+    C-b: move backward a character
+    C-c: mode-specific command prefix
+    C-d: delete character
+    C-e: move to end of line
+    C-f: move forward a character
+    C-g: keyboard quit
+    C-h: help command
+    C-k: kill line
+    C-l: recenter text
+    C-n: next line
+    C-o: open line
+    C-p: previous line
+    C-q: quoted insert
+    C-r: case insensitive search backward
+    C-s: case insensitive search forward
+    C-t: transpose characters
+    C-u: universal argument
+    C-v: scroll up
+    C-w: kill region
+    C-x: Control-X prefix
+    C-y: yank text
+    C-z: suspend emacs
+13. "C-g runs the command keyboard-quit
+    which is an interactive compiled Lisp function in `simple.el'.
+    It is bound to C-g.
+    (keyboard-quit)
+
+    Signal a `quit' condition.
+    During execution of Lisp code, this character causes a quit directly.
+    At top-level, as an editor command, this simply beeps."
+14. "Reinsert ("paste") the last stretch of killed text.
+    More precisely, reinsert the stretch of killed text most recently
+    killed OR yanked."
+15. emacs shows space available at the top of the file list. ls -l shows a "."
+    and "..", emacs does not. Emacs shows symbolic links in color (if
+    supported by the terminal environment).
+
+
+# Exercises
+
+## Exercise 1.4
+
+8. 6

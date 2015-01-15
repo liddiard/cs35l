@@ -1,0 +1,54 @@
+--- exer1.html	2015-01-13 18:30:30.000000000 -0800
++++ exer2.html	2015-01-14 17:24:13.000000000 -0800
+@@ -1,4 +1,4 @@
+-<!DOCTYPE html
++!DOCTYPE html
+ 	PUBLIC "-//W3C//DTD HTML 4.01//EN"
+ 	"http://www.w3.org/TR/html4/strict.dtd">
+ <html>
+@@ -13,13 +13,13 @@
+ 
+ <h2>Laboratory: Linux and Emacs scavenger hunt</h2>
+ 
+-<!-- diff，在UNIX系統上的一個工具程式，它可以比較兩個檔案之間的不同。通常它被用來比較同一個檔案，在不同版本間的差異。它可以產生一個擴展名為.diff或.patch的檔案，這個檔案可以被另一個工具程式patch來使用。-->
++
+ 
+ <p>Instructions: Use the commands that you learned in class to find
+ answers to these questions. Don't use a search engine like Google, and
+ don't ask your neighbor. If you need a hint, ask the <abbr>TA</abbr>.
+ When you find a new command, run it so you can see exactly how it
+-works. In addition to turning in the answers to these questions, turn
++  works. In addition to turning in the answers to these questions, turn
+ in a description of your session discovering them. As you do actions,
+ use a Linux-based editor to record your keystrokes and each answer in
+ files <samp>key1.txt</samp> and <samp>ans1.txt</samp> that you will
+@@ -87,7 +87,7 @@
+ 
+ <h2>Homework: Learning to use Emacs</h2>
+ 
+-<!-- DELETEME DELETEME DELETEME -->
++
+ 
+ <ul>
+  <li>Keith Waclena, <a
+@@ -256,9 +256,8 @@
+ 
+ <h2>Submit</h2>
+ 
+-<!-- You can learn more about HTML comments at
+-	<http://en.wikipedia.org/wiki/HTML_comment#Comments>.
+-	-->
++
++
+ 
+ <p>Submit the following files.</p>
+ 
+@@ -292,7 +291,7 @@
+ <pre><samp><a href='http://en.wikipedia.org/wiki/AWK'>awk</a> '/\r/ || 80 &lt; length' key1.txt ans1.txt
+ </samp></pre>
+ 
+-<p>should output nothing<!---->.</p>
++<p>should output nothing.</p>
+ 
+ <hr>
+ <address>

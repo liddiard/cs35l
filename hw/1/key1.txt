@@ -1,0 +1,68 @@
+# Lab 1
+
+1. man man
+2. which cp
+   which wc
+3. find /usr/bin -name '?'
+4. readlink -f /usr/bin/cc
+5. man chmod / symbolic
+6. -mtime
+7. find ~ -mtime 3
+8. find /bin -maxdepth 1  -type l -ls | wc -l
+9. find /usr/lib -type f -printf "%T+ %p\n" | sort
+10. printenv
+11. emacs C-h a sort C-x o C-v C-v C-v
+12. emacs C-h b C-x o C-v C-v C-v
+13. emacs C-h k C-g
+14. emacs C-h f yank
+15. cd /usr/bin emacs C-h f dired C-x 0 C-h d
+
+
+# Homework
+
+## Exercise 1.1
+
+1. (n/a)
+2. C-s a s c i i
+3. Esc < C-s i n s t r u c t i o n s
+4. Esc < C-s h t m l M-b
+5. Esc < C-s h u n t M-b
+6. C-e
+7. C-a
+8. Esc <
+9. (n/a)
+10. (I did it the in most efficient way the first time.)
+11. C-x C-c
+
+## Exercise 1.2
+
+2. C-s < ! - - ENTER C-a C-k
+3. C-s D E L E T E M E C-a C-k
+4. C-s w i k i C-s C-s C-a C-k C-k C-k C-p C-k
+5. C-s <!----> ENTER M-b M-f C-u 7 C-d
+
+## Exercise 1.3
+
+2. M-% A s s i g n m e n t 1 ENTER A s s i g n m e n t 3 5 y y
+3. M-% U T F - 8 ENTER U S - A S C I I y
+4. C-s < o l > ENTER C-e ENTER
+5. C-x C-c y
+
+## Exercise 1.4
+
+3. Esc > C-u 5 C-p C-SPACE C-n M-w M-g g 2 9 4 C-k C-y M-y C-a C-d
+4. C-r < ! - - C-r ENTER C-Space C-n C-n C-n C-n M-w M-g g 2 5 9 C-y C-a C-d
+   C-p C-d C-p C-d C-p Esc > C-r < ! - - C-r C-r ENTER C-SPACE C-n M-w M-g g
+   9 0 C-y Esc > C-r < ! - - C-r C-r C-r C-Space C-n M-w M-g g 1 6 C-y
+5. M-g g 3 1 1 C-SPACE Esc > C-w
+6. C-/
+7. - - > C-r < / h t m l > C-e ENTER < ! - -
+8. Esc < C-s < o l > C-s C-s C-s C-s C-s C-s Esc < M-% < o l > ENTER < / O l >
+   ENTER !
+
+## Exercise 1.5
+
+1. M-! mkdir ~/junk
+2. C-x d ~/junk/hello.c (C-c/C-v)
+3. M-x compile ENTER ~/junk/hello-out ENTER y
+4. M-! ./hello-out RETURN
