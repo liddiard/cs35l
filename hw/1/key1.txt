@@ -64,5 +64,5 @@
 
 1. M-! mkdir ~/junk
 2. C-x d ~/junk/hello.c (C-c/C-v)
-3. M-x compile ENTER ~/junk/hello-out ENTER y
+3. M-! touch ~/junk/hello-out M-x compile ENTER ~/junk/hello-out ENTER y
 4. M-! ./hello-out RETURN
