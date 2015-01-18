@@ -1,0 +1,40 @@
+#!/bin/bash
+
+dir=$1
+RESULT=`ls -a $dir | sort`
+declare -a ARRAY
+let count=0
+
+# build an array of all regular files in the directory
+for FILE in $RESULT
+do
+    if [ ! -L "$dir/$FILE" ]
+    then # file is NOT a symbolic link
+        if [ ! -r "$dir/$FILE" ]
+        then # we do NOT have read access to the file
+            echo "$dir/$FILE: Permission denied"
+            continue
+        fi
+        if [ -f "$dir/$FILE" ]
+        then # file is a regular file
+            ARRAY[$count]="$dir/$FILE"
+            let count=count+1
+        fi
+    fi
+done
+
+for FIRST_FILE in "${ARRAY[@]}"
+do
+    for SECOND_FILE in "${ARRAY[@]}"
+    do
+        if [ $FIRST_FILE != $SECOND_FILE ]
+        then # files do not have the same name
+            cmp -s $FIRST_FILE $SECOND_FILE
+            if [ $? == 0 ]
+            then # files have the same contents
+                rm $SECOND_FILE
+                ln $FIRST_FILE $SECOND_FILE
+            fi
+        fi
+    done
+done

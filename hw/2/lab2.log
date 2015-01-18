@@ -1,0 +1,26 @@
+sorted /usr/share/dict/words using the command:
+    sort -o words /usr/share/dict/words
+
+obtained a copy of the assignment web page with:
+    wget http://www.cs.ucla.edu/classes/winter15/cs35L/assign/assign2.html
+
+tr -c 'A-Za-z' '[\n*]'
+    replaces each non-alphabetic character with a newline
+
+tr -cs 'A-Za-z' '[\n*]'
+    replaces each group of contiguous non-alphabetic characters with a newline
+
+tr -cs 'A-Za-z' '[\n*]' | sort
+    alphabetically sorts the words (groups of contiguous alphabetic
+    characters) in the file, with each word on its own line
+
+tr -cs 'A-Za-z' '[\n*]' | sort -u
+    does the same as the previous command, but de-dupes the output; i.e. each
+    word is only displayed once
+
+tr -cs 'A-Za-z' '[\n*]' | sort -u | comm - words
+    prints three columns - words only in the HTML page, words only in the
+    wordlist, and words in common between the two
+
+tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - words
+    prints words in the HTML page that are not in the wordlist
