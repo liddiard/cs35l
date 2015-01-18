@@ -24,3 +24,21 @@ tr -cs 'A-Za-z' '[\n*]' | sort -u | comm - words
 
 tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - words
     prints words in the HTML page that are not in the wordlist
+
+I used wget to get the file at http://mauimapp.com/moolelo/hwnwdseng.htm.
+The first thing to do was to extract the table from the surrounding HTML.
+I accomplished this by grepping for '<td>.*</td>' to get all table cell
+elements. This worked because there is only one table on the page, and
+assuming valid HTML, <td> elements can only be inside a table. Next, to
+simplify removing opening and closing tags, I removed all forward slashes from
+the file with sed. Next, I used sed to remove the <td>s and empty lines. I
+then used awk, passing it NR % 2 == 0 to extract only even-numbered lines, as
+even lines contained the Hawaiian words we were interested in retaining. Next,
+I removed underlines and replaced backticks with apostrophes using sed. tr
+handled lowercasing everything. Then, I used sed to remove commas and replace
+all whitespace characters with newlines. I used a grep regex with an
+inverse matching group composed of the valid Hawaiian characters, which
+matched all lines which had non-Hawaiian characters. I passed the grep the
+-v flag, which inverts the selection, leaving me with only the lines which
+contained Hawaiian characters. Finally, I sorted the wordlist using the sort
+command with the -u option to remove any duplicates.
