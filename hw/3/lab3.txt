@@ -1,0 +1,32 @@
+# reproducing the problem
+
+Retrieved Coreutils 7.6 using command:
+    wget ftp://ftp.gnu.org/gnu/coreutils/coreutils-7.6.tar.gz
+unzip: tar -zxf coreutils-7.6.tar.gz
+cd coreutils-7.6
+make "build" directory
+generate makefile in build directory: ./configure --prefix="$PWD/build"
+make, make install
+change locale: export LC_ALL='en_US.UTF-8'
+reproduce bug by running: ./build/bin/ls -l
+
+
+# applying the patch
+
+copy the patch from the linked website into a file named "brady.patch"
+attempt to apply the patch: patch -p1 < ./brady.patch
+ran into an error: patch: **** malformed patch at line 11: outline -*-
+removed comment on lines 11-13
+re-run: patch -p1 < ./brady.patch (succeeds this time)
+
+
+recompile with make && make install
+run ./build/bin/ls -l again, verify that the issue is fixed
+
+Q1: Brady's patch removed "case_long_iso_time_style:" because it didn't do
+anything useful. The line above it, "case long_iso_time_style:", is the line
+that was actually necessary. The code still worked properly because control
+flow "fell through", but the "case_long_iso_time_style:" line was unnecessary.
+
+Q2: Brady's patch removes code that uses the user's locale format, so it is
+no longer properly localized.

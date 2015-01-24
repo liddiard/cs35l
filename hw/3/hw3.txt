@@ -1,0 +1,10 @@
+Q3: IndexError: list index out of range
+This happens because the Python random.choice function expects a list with
+at least one item. Line 273 of this function attempts to access an element
+in the list using bracket notation. Since there are no elements in the list,
+trying to access an item at any index will raise an IndexError.
+
+Q4: SyntaxError: invalid syntax (on line 65 of randline.py)
+This happens because syntax for error handling in the "except" block changed
+in Python 3. Python 3 no longer allows comma syntax, only "except ErrorType
+as exc:". See: https://docs.python.org/3.0/whatsnew/2.6.html#pep-3110
