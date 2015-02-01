@@ -1,0 +1,12 @@
+git clone git://git.savannah.gnu.org/diffutils.git
+changed into the diffutils directory
+git checkout v3.0
+git checkout -b quote
+patch -p1 < ../quote-3.0-patch.txt
+open emacs
+run C-x 4 a
+filename is already filled out, add description afterwards.
+do this for all files that have been changed
+git commit -a, copy ChangeLog into commit message
+
+exit SSH session, reconnect with -X option

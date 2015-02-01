@@ -1,0 +1,7 @@
+(clockwise, starting from top-left pane) 
+- shows a history of commits, along with commit messages and branch splitting/merging
+- shows the author of each commit, corresponding to the commits in the previous pane
+- shows the date and time of the commit
+- shows which files were changed in the selected commit
+- shows a changelog of the selected commit
+- shows metadata about the commit, including parent SHA and branches

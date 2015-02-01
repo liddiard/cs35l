@@ -1,0 +1,62 @@
+cloned diffutils repo with: git clone git://git.savannah.gnu.org/diffutils.git
+changed into the diffutils directory, git log > ../git-log.txt
+git tag > ../git-tag.txt
+git log --grep="quote 'like" to retrieve specified commit
+    (62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f)
+git checkout v3.0
+git checkout -b patch
+git describe
+git format-patch -1 62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f
+mv 0001-maint-quote-like-this-or-like-this-not-like-this.patch quote-patch.txt
+patch -p1 < quote-patch.txt
+the following things failed:
+    Hunk #1 FAILED at 9.
+    Hunk #3 FAILED at 60.
+    2 out of 3 hunks FAILED -- saving rejects to file README.rej
+    Hunk #1 FAILED at 19.
+    1 out of 1 hunk FAILED -- saving rejects to file README-hacking.rej
+    Hunk #1 FAILED at 29.
+    1 out of 1 hunk FAILED -- saving rejects to file cfg.mk.rej
+    Hunk #10 FAILED at 862.
+    Hunk #11 FAILED at 892.
+    Hunk #12 FAILED at 928.
+    3 out of 14 hunks FAILED -- saving rejects to file src/diff.c.rej
+    Hunk #6 FAILED at 434.
+    1 out of 9 hunks FAILED -- saving rejects to file src/diff3.c.rej
+git status
+emacs [filename]
+C-x v =
+C-x v u
+yes ENTER
+
+files reverted:
+    NEWS
+    README
+    TODO
+    doc/diagmeet.note
+    ms/config.bat
+    ms/config.site
+    po/en.po
+    src/diff.h
+    src/system.h
+    tests/help-version
+
+C-u C-c C-a
+
+git clean -f
+
+./bootstrap
+./configure
+make
+make check (failed with an error, but shouldn't matter)
+
+git clone in original repo again:
+    git clone git://git.savannah.gnu.org/diffutils.git diffutils-orig
+cd diffutils-orig
+git checkout v.3.0
+cd ..
+./diffutils/src/diff -pru diffutils-orig/ diffutils
+
+diff quote-3.0-test.txt ./diffutils/quote-3.0-patch.txt
+
+Yes, the changes are innocuous. They are the changing the ' to `.
