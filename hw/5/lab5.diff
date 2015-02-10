@@ -1,0 +1,22 @@
+2015-02-07  Harrison James Liddiard  <classhli@lnxsrv05.seas.ucla.edu>
+
+        * timespec.h: made timespec_cmp function return expected output when
+          comparing with dates earlier than unix epoch time
+
+
+--- ./lib/timespec.h	2005-09-21 23:05:39.000000000 -0700
++++ ./lib/timespec.h	2015-02-07 18:50:39.854241000 -0800
+@@ -45,7 +45,13 @@
+ static inline int
+ timespec_cmp (struct timespec a, struct timespec b)
+ {
+-  int diff = a.tv_sec - b.tv_sec;
++  int diff;
++  int rhs = a.tv_sec;
++  int lhs = b.tv_sec;
++  if (rhs > lhs)
++    diff = 1;
++  else
++    diff = 0;
+   return diff ? diff : a.tv_nsec - b.tv_nsec;
+ }

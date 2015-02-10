@@ -1,0 +1,52 @@
+get the coreutils with bug: wget http://www.cs.ucla.edu/classes/winter15/cs35L/assign/coreutils.diff
+./configure, make
+
+make install fails with the below error:
+
+make[2]: Entering directory `/w/home.05/class/classhli/tmp/coreutils-with-bug/lib'
+if gcc -DHAVE_CONFIG_H -DLIBDIR=\"/usr/local/lib\" -I. -I. -I..  -I.. -I.   -g -O2 -MT utimecmp.o -MD -MP -MF ".deps/utimecmp.Tpo" -c -o utimecmp.o utimecmp.c; \
+    then mv -f ".deps/utimecmp.Tpo" ".deps/utimecmp.Po"; else rm -f ".deps/utimecmp.Tpo"; exit 1; fi
+In file included from utimecmp.c:41:
+utimens.h:2: error: conflicting types for 'futimens'
+/usr/include/sys/stat.h:374: note: previous declaration of 'futimens' was here
+make[2]: *** [utimecmp.o] Error 1
+make[2]: Leaving directory `/w/home.05/class/classhli/tmp/coreutils-with-bug/lib'
+make[1]: *** [install] Error 2
+make[1]: Leaving directory `/w/home.05/class/classhli/tmp/coreutils-with-bug/lib'
+
+get the patch:
+    wget http://www.cs.ucla.edu/classes/winter15/cs35L/assign/coreutils.diff
+apply the patch: patch -p0 < coreutils.diff
+
+The core of the original error is "conflicting types for 'futimens'". This
+error occurs because the name "futimens" collides with a module already on the
+SEASnet servers. The patch renames it to 'coreutils_futimens' to
+circumvent the issue.
+
+Followed the steps in the spec to reproduce the problem. The problem is that
+the files should be sorted with most recently modified first when the -t flag
+is set, but this isn't the case.
+
+Debugged using gdb by opening emacs on the ls.c file.
+M-x gdb, delete "groups", add "ls". After looking through the file, found
+sort_files function header on line 263. Found the corresponding function by
+searching for it with C-s. At the end of the function, qsort is called, which
+takes a comparison function pointer as its last argument.
+
+Set breakpoint on line where qsort is called with C-x C-a C-b. Switched to
+gdb debugging console, ran r -lt to run the file with "-lt" options.
+
+The program stops at the breakpoint. Inspect the value of "func" by running
+"p func". The output is: "$1 = (int (*)(V, V)) 0x403430 <compare_mtime>".
+Found the compare_mtime function on line 2884. compare_mtime returns cmp_mtime
+which is on line 2877. Inspecting this function reveals that it relies on
+a diff provided by timespec_cmp. Some search reveals that this function is
+defined in timespec.h, which is in lib/timespec.h.
+
+Modify the timespec_cmp function to check if a.tv_sec is greater than b.tv_sec
+and just set diff to 1 (true) so we don't run into the problem of the integer
+overflowing when we subtract a very negative int from a positive one.
+
+Got a fresh copy of the coreutils-with-bug, diff it with the modified version,
+use emacs to generate changelog, concatenated changelog and diff to produce
+lab5.diff.
