@@ -1,0 +1,18 @@
+1. Yes, the network is still secure because only the public keys have been
+transmitted over the network and the attacker cannot decrypt any data over
+the network without a private.
+
+If they had tapped the keyboard, this method would still be secure because
+the private data (private key) is generated and is not a result of keyboard
+entry.
+
+If they had physical control of the media on which the OS was running, this
+method would not be secure because the attacker could presumably view the
+private key or even tamper with the mechanism by which the keys are generated.
+
+2. gpg --verify only checks if the signature matches the tar file, but it
+doesn't check who actually created the tar file. To solve this problem and
+actually verify the key, you would have to track who you received the public
+key from. For example, if you trusted a person, you could physically meet them
+in person to get their public key. In this case, you could be "sure" that
+the key was valid.

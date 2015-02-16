@@ -1,0 +1,17 @@
+On server:
+sudo adduser jbrundrett
+fill out the information it asks for, including a password
+change to jbrundrett's home directory
+sudo mkdir .ssh
+sudo chown jbrundett .ssh  # make jbrundrett the owner of the directory
+sudo chmod 700 .ssh  # give only owner full access, everyone else no access
+"ifconfig" to get IP address to give to partner
+
+On partner's computer (client):
+ssh-keygen (press ENTER at all prompts)
+    # generates a public key/private key pair
+ssh-copy-id -i ~/.ssh/id_rsa [server_ip_addr]
+    # uploads public key file to the server
+ssh-add  # add private key to authentication agent
+ssh –X jbrundrett@server_ip_addr  # connect to server with X-forwarding
+gedit  # run a program, opens in a GUI on partner's server
