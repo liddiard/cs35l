@@ -1,0 +1,28 @@
+3. strace analysis
+
+catb.c, when writing to standard output, reads the entire file into memory in
+one system call and writes it out one line at a time. When run with another
+file as output, it reads input in chunks of size 4096 at a time, sixteen
+times, before writing an output of size 65536 (4096*16 = 65536).
+
+catu.c, when writing to standard output, alternates between reading and
+writing single characters at a time. It exhibits the same behavior when
+writing to a file.
+
+
+4. time results
+
+catb.c, tested on /usr/share/dict/words
+real	0m1.899s
+user	0m0.198s
+sys	    0m0.795s
+
+catb.c, tested on /usr/share/dict/words
+real	0m5.771s
+user	0m0.225s
+sys	    0m5.538s
+
+
+When used on larger files, it becomes clear that catb.c is more efficient
+because it reads and writes characters in larger chunks than catu.c, resulting
+in fewer total system calls.
