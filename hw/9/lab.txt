@@ -1,0 +1,85 @@
+- Use wget to download sthttpd 2.27.0 and decompressed package contents
+- Run the ./configure script
+- Copy the patch text into a file called "patch" in the same directory as the
+  shttpd library and run patch -p0 < patch
+- Build the program with "make"
+- Go into the "src" directory, run "./httpd -p 8080"
+- Check that it's working by running "curl localhost:8080" and checking output
+  (an HTML-formatted listing of the current directory)
+- To make the webserver crash, sent a request to http://localhost:8080/aaaa...
+  with about 2500 'a's appended in the request URL. The error you receive is:
+  "Connecting to localhost|127.0.0.1|:8080... failed: Connection refused."
+- Ran the program under gdb. Used "ps aux | grep httpd" to get the PID,
+  attached gdb to the process, ran wget request with a bunch of 'a's at the
+  end again, pressed 'c' in gdb to continue and crash the server. Error was:
+  "Program received signal SIGSEGV, Segmentation fault.
+   0x0000003764079afd in _int_malloc () from /lib64/libc.so.6"
+- bt outputs the following:
+  #0  0x0000003764079afd in _int_malloc () from /lib64/libc.so.6
+  #1  0x000000376407a346 in calloc () from /lib64/libc.so.6
+  #2  0x000000376406ef2d in open_memstream () from /lib64/libc.so.6
+  #3  0x00000037640e4a1b in __vsyslog_chk () from /lib64/libc.so.6
+  #4  0x000000376407048e in __libc_message () from /lib64/libc.so.6
+  #5  0x0000003764075e66 in malloc_printerr () from /lib64/libc.so.6
+  #6  0x000000376407b937 in _int_realloc () from /lib64/libc.so.6
+  #7  0x000000376407baf5 in realloc () from /lib64/libc.so.6
+  #8  0x0000000000406498 in httpd_realloc_str (strP=0x208ab10, maxsizeP=0x208ab18,
+      size=<value optimized out>) at libhttpd.c:715
+  #9  0x00000000004047e7 in handle_read (argc=<value optimized out>, argv=<value optimized out>)
+      at thttpd.c:1600
+  #10 main (argc=<value optimized out>, argv=<value optimized out>) at thttpd.c:806
+- This vulnerability could easily be made into a DDoS attack by having
+  multiple computers send badly formatted (i.e. long URL) requests to the
+  server. A simple script could run this command in a tight loop from each
+  computer in the background to increase effectiveness.
+- Within the src directory, remove thttpd.o.
+- Modify the Makefile PFLAGS variable to include -fno-stack-protector,
+  make the thttpd.o file and rename it per the spec. Repeat the same process
+  using the flag -fstack-protector
+- Script to check function calls:
+  "diff thttpd-stackprot.s thttpd-nostackprot.s | grep call -C 4"
+- The nostackprot file has fewer assembly instructions and is therefore
+  probably more efficient.
+- The stackprot file calls a function "__stack_chk_fail", which likely handles
+  stack protection to prevent malicious code from running. This won't prevent
+  the DDoS attack, but it would prevent a remote code execution exploit.
+- make clean && ./configure
+- Get the newest version of gcc by modifying PATH variable:
+  "export PATH=/usr/local/cs/bin:$PATH"
+- run the make command defined in the spec:
+  make CC="gcc -m32" \
+  CFLAGS="-fsanitize=address -fstack-protector" \
+  LDFLAGS="-Xlinker --rpath=/usr/local/cs/gcc-$(gcc -dumpversion)/lib"
+- edit the makefile to include flags: -S -fsanitize=address -fstack-protector
+- make thttp.o, diff it with thttpd-sanitize.s and grep for "call"s
+- The sanitize file has significantly more system calls for error handling
+  and no return handling, making it less efficient.
+- Valgrind throws an error when a bad request is sent. Valgrind's output is
+  below:
+
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+[classhli@lnxsrv05 ~/tmp/sthttpd-2.27.0/src]$ ==31011== Syscall param read(buf) points to unaddressable byte(s)
+==31011==    at 0x37640DB4C0: __read_nocancel (in /lib64/libc-2.12.so)
+==31011==    by 0x40480B: main (thttpd.c:1605)
+==31011==  Address 0x4c6ce41 is 0 bytes after a block of size 2,001 alloc'd
+==31011==    at 0x4A06C20: realloc (vg_replace_malloc.c:662)
+==31011==    by 0x406497: httpd_realloc_str (libhttpd.c:715)
+==31011==    by 0x4047E6: main (thttpd.c:1600)
+==31011==
+--31011-- VALGRIND INTERNAL ERROR: Valgrind received a signal 11 (SIGSEGV) - exiting
+--31011-- si_code=80;  Faulting address: 0x0;  sp: 0x402f04de0
+
+valgrind: the 'impossible' happened:
+   Killed by fatal signal
+==31011==    at 0x3803EC04: vgPlain_arena_malloc (m_mallocfree.c:291)
+==31011==    by 0x3800386A: vgMemCheck_realloc (mc_malloc_wrappers.c:490)
+==31011==    by 0x3807A0AD: vgPlain_scheduler (scheduler.c:1673)
+==31011==    by 0x380A5A29: run_a_thread_NORETURN (syswrap-linux.c:103)
+
+sched status:
+  running_tid=1
+
+Thread 1: status = VgTs_Runnable
+==31011==    at 0x4A06C20: realloc (vg_replace_malloc.c:662)
+==31011==    by 0x406497: httpd_realloc_str (libhttpd.c:715)
+==31011==    by 0x4047E6: main (thttpd.c:1600)

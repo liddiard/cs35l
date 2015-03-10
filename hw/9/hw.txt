@@ -1,0 +1,54 @@
+Created a 64-bit Ubuntu 14.10 instance, downloaded the key pair
+Connected to instance with ssh -i key.pem ubuntu@52.11.197.229
+Tried to install gcc, ran into an error, ran sudo apt-get update
+Installed gcc and make with sudo apt-get update
+Used wget to download file, uncompressed it
+Ran ./configure && make
+Changed maxsize_expansion and size_expansion_times_4 in sample patch to
+80 and 100, respectively.
+Run the server, get the process id, attach gdb to it. Run wget with a long URL
+and backtrace shows the following error:
+
+Program received signal SIGINT, Interrupt.
+0x00007fa9d24e6110 in __poll_nocancel ()
+    at ../sysdeps/unix/syscall-template.S:81
+81      in ../sysdeps/unix/syscall-template.S
+(gdb) bt
+#0  0x00007fa9d24e6110 in __poll_nocancel ()
+    at ../sysdeps/unix/syscall-template.S:81
+#1  0x0000000000406731 in poll (__timeout=<optimized out>,
+    __nfds=<optimized out>, __fds=<optimized out>)
+    at /usr/include/x86_64-linux-gnu/bits/poll2.h:46
+#2  poll_watch (timeout_msecs=<optimized out>) at fdwatch.c:620
+#3  fdwatch (timeout_msecs=<optimized out>) at fdwatch.c:246
+#4  0x00000000004042c5 in main (argc=<optimized out>, argv=<optimized out>)
+    at thttpd.c:755
+
+
+Vulnerabilities
+
+VU#695940: regex overflow vulnerability
+low: the attacker would first have to gain access to the web server in order
+to take advantage of this vulnerability. Additionally, the impact of the
+vulnerability is not clear, but probably means it's not being rampantly
+exploited in the wild.
+
+VU#787252: Windows group policy authentication
+high: "a remote, unauthenticated attacker may execute arbitrary code and
+completely compromise vulnerable systems" is about as bad as it gets. This
+vulnerability should be patched immediately.
+
+VU#967332: C library buffer overflow
+high: this vulnerability could allow for remote code execution, and its
+access complexity is low. Authentication is not required to carry out the
+exploit.
+
+VU#976132: securing Resume Boot Path script
+low: the attack must be carried out by an authenticated local attacker. If
+said attacker existed, the results could be catastrophic, but authentication
+significantly increases the attack complexity.
+
+VU#252743: bash remote execution
+high: the attack complexity is extremely low and anything running bash (which
+is pretty much any linux-based server) is affected. The vulnerability can
+be exploited without authentication.
